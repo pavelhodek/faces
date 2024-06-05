@@ -1,49 +1,26 @@
 <!DOCTYPE html> 
 
 <html lang="cs"> 
-
 <head> 
-
 <meta charset="UTF-8"> 
-
 <title>Kvíz s obrázky</title> 
-
 </head> 
-
 <body> 
 
- 
-
 <div id="quiz-container"> 
-
   <img id="person-image" src="" alt="Osoba"> 
-
   <div id="options-container"></div> 
-
   <button id="next-button" onclick="loadNextImage()">Další obrázek</button> 
-
 </div> 
-
- 
 
 <div id="results-container"> 
-
   <p>Správné odpovědi: <span id="correct-answers">0</span></p> 
-
   <p>Chybné odpovědi: <span id="wrong-answers">0</span></p> 
-
   <button onclick="startQuiz()">Spustit kvíz znovu</button> 
-
 </div> 
 
- 
-
 <script> 
-
-// Předpokládáme, že máte pole s názvy obrázků a odpovídajícími jmény 
-
 var images = [ 
-
 { src: 'faces/alligator.png', name: 'alligator' },
 { src: 'faces/ant.png', name: 'ant' },
 { src: 'faces/bat.png', name: 'bat' },
@@ -90,119 +67,73 @@ var images = [
 { src: 'faces/turkey.png', name: 'turkey' },
 { src: 'faces/turtle.png', name: 'turtle' },
 { src: 'faces/wolf.png', name: 'wolf' },
-
 ]; 
 
- 
-
 var currentImageIndex = 0; 
-
 var correctAnswers = 0; 
-
 var wrongAnswers = 0; 
 
- 
-
 function startQuiz() { 
-
   correctAnswers = 0; 
-
   wrongAnswers = 0; 
-
   currentImageIndex = 0; 
-
+  showResults() 
   images = shuffleArray(images); 
-
   loadNextImage(); 
-
 } 
 
  
 
 function loadNextImage() { 
-
   if (currentImageIndex < images.length) { 
-
     var image = images[currentImageIndex]; 
-
     document.getElementById('person-image').src = image.src; 
-
     generateOptions(image.name); 
-
     currentImageIndex++; 
-
   } else { 
     showResults(); 
     alert('Kvíz dokončen! Správné odpovědi: ' + correctAnswers + ', chybné odpovědi: ' + wrongAnswers); 
   } 
-
 } 
 
  
 
 function generateOptions(correctName) { 
-
   var options = [correctName]; 
-
-  // Přidání dalších náhodných jmen do možností 
-
+ 
+ // Přidání dalších náhodných jmen do možností 
   while (options.length < 5) { 
-
     var randomName = images[Math.floor(Math.random() * images.length)].name; 
-
     if (options.indexOf(randomName) === -1) { 
-
       options.push(randomName); 
-
     } 
-
   } 
 
   options = shuffleArray(options); 
 
-   
-
   var optionsContainer = document.getElementById('options-container'); 
-
   optionsContainer.innerHTML = ''; 
-
+ 
   options.forEach(function(name) { 
-
     var button = document.createElement('button'); 
-
     button.textContent = name; 
-
     button.onclick = function() { checkAnswer(name, correctName); }; 
-
     optionsContainer.appendChild(button); 
-
   }); 
-
 } 
 
- 
-
 function checkAnswer(selectedName, correctName) { 
-
   if (selectedName === correctName) { 
-
     correctAnswers++; 
-
     //alert('Správně!'); 
-
   } else { 
-
     wrongAnswers++; 
-
     //alert('Špatně, správná odpověď byla ' + correctName); 
-
   } 
 
   showResults();
   loadNextImage(); 
 } 
-
- 
 
 function showResults() { 
   document.getElementById('correct-answers').textContent = correctAnswers; 
@@ -210,27 +141,16 @@ function showResults() {
   //alert('Kvíz dokončen! Správné odpovědi: ' + correctAnswers + ', chybné odpovědi: ' + wrongAnswers); 
 } 
 
- 
-
 function shuffleArray(array) { 
-
   for (var i = array.length - 1; i > 0; i--) { 
-
     var j = Math.floor(Math.random() * (i + 1)); 
-
     var temp = array[i]; 
-
     array[i] = array[j]; 
-
     array[j] = temp; 
-
   } 
 
-  return array; 
-
+ return array; 
 } 
-
- 
 
 // Spuštění kvízu při načtení stránky 
 
@@ -238,8 +158,5 @@ window.onload = startQuiz;
 
 </script> 
 
- 
-
 </body> 
-
 </html> 
