@@ -1,0 +1,245 @@
+<!DOCTYPE html> 
+
+<html lang="cs"> 
+
+<head> 
+
+<meta charset="UTF-8"> 
+
+<title>Kvíz s obrázky</title> 
+
+</head> 
+
+<body> 
+
+ 
+
+<div id="quiz-container"> 
+
+  <img id="person-image" src="" alt="Osoba"> 
+
+  <div id="options-container"></div> 
+
+  <button id="next-button" onclick="loadNextImage()">Další obrázek</button> 
+
+</div> 
+
+ 
+
+<div id="results-container"> 
+
+  <p>Správné odpovědi: <span id="correct-answers">0</span></p> 
+
+  <p>Chybné odpovědi: <span id="wrong-answers">0</span></p> 
+
+  <button onclick="startQuiz()">Spustit kvíz znovu</button> 
+
+</div> 
+
+ 
+
+<script> 
+
+// Předpokládáme, že máte pole s názvy obrázků a odpovídajícími jmény 
+
+var images = [ 
+
+{ src: 'faces/alligator.png', name: 'alligator' },
+{ src: 'faces/ant.png', name: 'ant' },
+{ src: 'faces/bat.png', name: 'bat' },
+{ src: 'faces/bear.png', name: 'bear' },
+{ src: 'faces/bee.png', name: 'bee' },
+{ src: 'faces/bird.png', name: 'bird' },
+{ src: 'faces/bull.png', name: 'bull' },
+{ src: 'faces/bulldog.png', name: 'bulldog' },
+{ src: 'faces/butterfly.png', name: 'butterfly' },
+{ src: 'faces/cat.png', name: 'cat' },
+{ src: 'faces/cow.png', name: 'cow' },
+{ src: 'faces/crab.png', name: 'crab' },
+{ src: 'faces/crocodile.png', name: 'crocodile' },
+{ src: 'faces/deer.png', name: 'deer' },
+{ src: 'faces/dog.png', name: 'dog' },
+{ src: 'faces/donkey.png', name: 'donkey' },
+{ src: 'faces/duck.png', name: 'duck' },
+{ src: 'faces/eagle.png', name: 'eagle' },
+{ src: 'faces/elephant.png', name: 'elephant' },
+{ src: 'faces/fish.png', name: 'fish' },
+{ src: 'faces/fox.png', name: 'fox' },
+{ src: 'faces/frog.png', name: 'frog' },
+{ src: 'faces/giraffe.png', name: 'giraffe' },
+{ src: 'faces/gorilla.png', name: 'gorilla' },
+{ src: 'faces/hippo.png', name: 'hippo' },
+{ src: 'faces/horse.png', name: 'horse' },
+{ src: 'faces/chicken.png', name: 'chicken' },
+{ src: 'faces/insect.png', name: 'insect' },
+{ src: 'faces/lion.png', name: 'lion' },
+{ src: 'faces/monkey.png', name: 'monkey' },
+{ src: 'faces/moose.png', name: 'moose' },
+{ src: 'faces/mouse.png', name: 'mouse' },
+{ src: 'faces/owl.png', name: 'owl' },
+{ src: 'faces/panda.png', name: 'panda' },
+{ src: 'faces/penguin.png', name: 'penguin' },
+{ src: 'faces/pig.png', name: 'pig' },
+{ src: 'faces/rabbit.png', name: 'rabbit' },
+{ src: 'faces/rhino.png', name: 'rhino' },
+{ src: 'faces/rooster.png', name: 'rooster' },
+{ src: 'faces/shark.png', name: 'shark' },
+{ src: 'faces/sheep.png', name: 'sheep' },
+{ src: 'faces/snake.png', name: 'snake' },
+{ src: 'faces/tiger.png', name: 'tiger' },
+{ src: 'faces/turkey.png', name: 'turkey' },
+{ src: 'faces/turtle.png', name: 'turtle' },
+{ src: 'faces/wolf.png', name: 'wolf' },
+
+]; 
+
+ 
+
+var currentImageIndex = 0; 
+
+var correctAnswers = 0; 
+
+var wrongAnswers = 0; 
+
+ 
+
+function startQuiz() { 
+
+  correctAnswers = 0; 
+
+  wrongAnswers = 0; 
+
+  currentImageIndex = 0; 
+
+  images = shuffleArray(images); 
+
+  loadNextImage(); 
+
+} 
+
+ 
+
+function loadNextImage() { 
+
+  if (currentImageIndex < images.length) { 
+
+    var image = images[currentImageIndex]; 
+
+    document.getElementById('person-image').src = image.src; 
+
+    generateOptions(image.name); 
+
+    currentImageIndex++; 
+
+  } else { 
+    showResults(); 
+    alert('Kvíz dokončen! Správné odpovědi: ' + correctAnswers + ', chybné odpovědi: ' + wrongAnswers); 
+  } 
+
+} 
+
+ 
+
+function generateOptions(correctName) { 
+
+  var options = [correctName]; 
+
+  // Přidání dalších náhodných jmen do možností 
+
+  while (options.length < 5) { 
+
+    var randomName = images[Math.floor(Math.random() * images.length)].name; 
+
+    if (options.indexOf(randomName) === -1) { 
+
+      options.push(randomName); 
+
+    } 
+
+  } 
+
+  options = shuffleArray(options); 
+
+   
+
+  var optionsContainer = document.getElementById('options-container'); 
+
+  optionsContainer.innerHTML = ''; 
+
+  options.forEach(function(name) { 
+
+    var button = document.createElement('button'); 
+
+    button.textContent = name; 
+
+    button.onclick = function() { checkAnswer(name, correctName); }; 
+
+    optionsContainer.appendChild(button); 
+
+  }); 
+
+} 
+
+ 
+
+function checkAnswer(selectedName, correctName) { 
+
+  if (selectedName === correctName) { 
+
+    correctAnswers++; 
+
+    //alert('Správně!'); 
+
+  } else { 
+
+    wrongAnswers++; 
+
+    //alert('Špatně, správná odpověď byla ' + correctName); 
+
+  } 
+
+  showResults();
+  loadNextImage(); 
+} 
+
+ 
+
+function showResults() { 
+  document.getElementById('correct-answers').textContent = correctAnswers; 
+  document.getElementById('wrong-answers').textContent = wrongAnswers; 
+  //alert('Kvíz dokončen! Správné odpovědi: ' + correctAnswers + ', chybné odpovědi: ' + wrongAnswers); 
+} 
+
+ 
+
+function shuffleArray(array) { 
+
+  for (var i = array.length - 1; i > 0; i--) { 
+
+    var j = Math.floor(Math.random() * (i + 1)); 
+
+    var temp = array[i]; 
+
+    array[i] = array[j]; 
+
+    array[j] = temp; 
+
+  } 
+
+  return array; 
+
+} 
+
+ 
+
+// Spuštění kvízu při načtení stránky 
+
+window.onload = startQuiz; 
+
+</script> 
+
+ 
+
+</body> 
+
+</html> 
